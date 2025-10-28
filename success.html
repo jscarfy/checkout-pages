@@ -1,10 +1,44 @@
-<!doctype html><meta charset="utf-8">
-<title>Payment successful</title>
-<h1>✅ Payment successful</h1>
-<p>Thank you! Your payment has been processed.</p>
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>付款成功｜Payment Succeeded</title>
+<h1>付款成功｜Payment Succeeded</h1>
+
+<p><b>中文：</b>我們正在核驗你的訂單並生成個人化檔案（含指紋防偽）。完成後會提供「<u>短效下載連結</u>」。若尚未就緒，請稍後重新整理。</p>
+<p><b>EN:</b> We are verifying your order and generating a personalized file (with anti-piracy fingerprint). A <u>short-lived download link</u> will appear below when ready. If not ready yet, refresh later.</p>
+
+<div id="status">正在處理中…｜Processing…</div>
+<div id="result" style="display:none">
+  <p><b>中文：</b>你的下載連結（<b>時效 15~30 分鐘</b>，可能限制下載次數）：<br>
+     <b>EN:</b> Your download link (<b>valid for ~15–30 minutes</b>, may be limited by download counts):</p>
+  <p><a id="dl" href="#" target="_blank" rel="noopener">下載｜Download</a></p>
+</div>
+
 <script>
-  const u=new URL(location.href);
-  const sid=u.searchParams.get('session_id');
-  if (sid) document.body.insertAdjacentHTML('beforeend',
-    `<p><small>Checkout Session: <code>${sid}</code></small></p>`);
+(function(){
+  // 你可以在部署時將此行替換成部署的外網 API，例如：
+  // window.API_BASE = 'https://api.yourdomain.com';
+  window.API_BASE = window.API_BASE || 'http://localhost:8080';
+
+  const p = new URLSearchParams(location.search);
+  const sid = p.get('session_id');
+  const status = document.getElementById('status');
+  const result = document.getElementById('result');
+  const link = document.getElementById('dl');
+
+  if(!sid){ status.textContent = '缺少 session_id｜missing session_id'; return; }
+
+  fetch(window.API_BASE + '/api/claim', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ session_id: sid })
+  })
+  .then(r => { if(!r.ok) throw new Error('claim failed'); return r.json(); })
+  .then(data => {
+    link.href = data.download_url;
+    status.style.display = 'none';
+    result.style.display = 'block';
+  })
+  .catch(() => {
+    status.textContent = '尚未收到款或生成中，請稍後再重整此頁。｜Payment not captured or file not ready; refresh later.';
+  });
+})();
 </script>

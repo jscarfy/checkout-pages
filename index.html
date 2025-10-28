@@ -1,7 +1,18 @@
-<!doctype html><meta charset="utf-8">
-<title>Checkout Pages</title>
-<h1>Stripe Checkout Pages</h1>
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout Pages｜結帳入口</title>
+<h1>AI 產品結帳入口（Go 後端版）｜AI Product Checkout (Go backend)</h1>
+
+<p>
+  <b>中文：</b>此站僅提供顯示/回跳頁面；實際下單與交付由 Go 後端完成。<br>
+  <b>EN:</b> This site only hosts visible pages; the checkout & delivery are handled by the Go backend.
+</p>
+
 <ul>
-  <li><a href="success.html?session_id=test">success.html</a></li>
-  <li><a href="cancel.html">cancel.html</a></li>
+  <li><a href="success.html?session_id=test">測試成功頁（本地自測）｜Test success page (local self-check)</a></li>
+  <li><a href="cancel.html">取消頁｜Cancel page</a></li>
 </ul>
+
+<p>
+  <b>中文：</b>正式購買請在你的銷售頁呼叫 <code>POST /api/checkout</code> 取得 Stripe 連結並跳轉。<br>
+  <b>EN:</b> For real purchase, call <code>POST /api/checkout</code> to obtain the Stripe URL and redirect.
+</p>
